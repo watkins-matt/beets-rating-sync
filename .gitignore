@@ -1,0 +1,5 @@
+*.py[cod]
+.vscode/
+__pycache__/
+.mbcache/
+.lastfm/

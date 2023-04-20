@@ -6,7 +6,10 @@ from beets.plugins import BeetsPlugin
 from beets.ui import Subcommand
 from confuse import ConfigValueError, NotFoundError
 
-from .collection import CollectionGroup, RatingCollectionGroup, RecordingCollection
+from beetsplug.exporter.beet_rating_exporter import BeetRatingExporter
+
+from .collection import (CollectionGroup, RatingCollectionGroup,
+                         RecordingCollection)
 from .exporter.csv_exporter import CSVExporter
 from .exporter.mb_rating_collection_exporter import MBRatingCollectionExporter
 from .importer.last_fm_importer import LastFMLovedTrackImporter
@@ -38,7 +41,7 @@ class RatingSyncPlugin(BeetsPlugin):
 
         musicbrainzngs.auth(self.mb_user, self.mb_pass)
         musicbrainzngs.set_useragent(
-            "Beets-Rating-Sync", "0.1b", "https://github.com/watkins-matt"
+            "Beets-Rating-Sync", "0.1b", "https://github.com/watkins-matt/beets-rating-sync"
         )
         musicbrainzngs.set_rate_limit(limit_or_interval=1.0, new_requests=1)
 
@@ -86,9 +89,11 @@ class RatingSyncPlugin(BeetsPlugin):
             mb_user = mb_cache.get_user(self.mb_user, self.mb_pass)
             mb_import = MBRatingCollectionImporter(mb_user, mb_cache, track_finder)
             mb_exporter = MBRatingCollectionExporter(mb_user)
+            beet_exporter = BeetRatingExporter(lib)
             importers.append(mb_import)
             # exporters.append(mb_exporter)
             exporters.append(CSVExporter(mb_cache.get_rating_cache_path()))
+            exporters.append(beet_exporter)
 
         for importer in importers:
             print("Importing from %s" % (type(importer).__name__))

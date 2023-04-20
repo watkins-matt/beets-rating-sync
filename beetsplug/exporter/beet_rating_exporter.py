@@ -12,17 +12,22 @@ class BeetRatingExporter(RatingStoreExporter):
         found_count = 0
         missing_count = 0
 
-        recordings = sorted(rating_store.ratings, key=lambda k: k.rating, reverse=True)
+        recordings = sorted(rating_store.ratings.values(), key=lambda k: k.rating, reverse=True)
         matcher = RecordingMatcher(self.library, getLogger("beets"))
 
         for recording in recordings:
             song = matcher.match(recording)
 
-            if song and recording.rating != 0 and song["rating"] != int(recording.rating):
-                # self._log.debug("Found song: {0}", recording.title)
-                song["rating"] = int(recording.rating)
-                song.store()
-                found_count += 1
+            # We found a song and have a rating to update
+            if song and recording.rating != 0:
+
+                # Only update if necessary
+                existing_rating = song.get("rating", 0)
+                if existing_rating != recording.rating:
+                    song["rating"] = int(recording.rating)
+                    song.store()
+                    found_count += 1
+                    print(f"Found song: {recording.title} --- {recording.rating}")
 
             else:
                 # self._log.info(

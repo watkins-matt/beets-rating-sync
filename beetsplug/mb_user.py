@@ -1,5 +1,6 @@
 import csv
 import os
+import time
 from pathlib import Path
 
 import musicbrainzngs
@@ -89,8 +90,19 @@ class MBRecordingCollection(MBCollection):
         if not cache_path:
             cache_path = self.cache_path
 
+        # If the cache file exists and is recent, load from it
         if os.path.exists(cache_path):
-            self.load_cache(cache_path)
+            # Check the modification time of the cache file
+            cache_mod_time = os.path.getmtime(cache_path)
+            current_time = time.time()
+
+            if current_time - cache_mod_time > (3 * 60 * 60):  # 3 hours in seconds
+                # Cache is older than 3 hours, so load from MusicBrainz and update the cache
+                print("Cache is older than 3 hours, reloading and recaching from Musicbrainz.")
+                self.load_from_musicbrainz()
+            else:
+                # Cache is fresh, so load from the cache file
+                self.load_cache(cache_path)
         else:
             self.load_from_musicbrainz()
 

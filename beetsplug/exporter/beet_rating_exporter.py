@@ -18,7 +18,7 @@ class BeetRatingExporter(RatingStoreExporter):
         for recording in recordings:
             song = matcher.match(recording)
 
-            if song and recording.rating != 0:
+            if song and recording.rating != 0 and song["rating"] != int(recording.rating):
                 # self._log.debug("Found song: {0}", recording.title)
                 song["rating"] = int(recording.rating)
                 song.store()

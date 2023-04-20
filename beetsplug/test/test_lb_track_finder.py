@@ -17,7 +17,7 @@ class TestLBTrackFinder(unittest.TestCase):
         beet_path = os.getenv("BEETSDIR", default=home)
         beet_path = os.path.join(beet_path, "library.db")
 
-        beet_lib = library.Library(beet_path)
+        beet_lib = library.Library(path=beet_path)
 
         track_finder = LibraryTrackFinder(beet_lib, True, None)
         recording = track_finder.find("GTA", "All About It")

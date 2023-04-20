@@ -28,7 +28,7 @@ class TestMBCollectionImporter(unittest.TestCase):
             os.path.exists(beet_path), f"Beets library does not exist at {beet_path}"
         )
 
-        beet_lib = library.Library(beet_path)
+        beet_lib = library.Library(path=beet_path)
         cache = MBTrackCache()
         track_finder = LibraryTrackFinder(beet_lib, True, cache)
 

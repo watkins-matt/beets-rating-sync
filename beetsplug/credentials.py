@@ -7,7 +7,7 @@ from confuse import ConfigValueError, NotFoundError
 
 user_agent = "Beets-Rating-Sync"
 version = "0.1b"
-contact = "https://github.com/watkins-matt"
+contact = "https://github.com/watkins-matt/beets-rating-sync"
 
 
 def load_musicbrainz_credentials():

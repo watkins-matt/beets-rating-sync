@@ -1,15 +1,9 @@
 import musicbrainzngs
+from beets import dbcore
 from thefuzz import fuzz
 
-from beets import dbcore
-
-from .normalize import (
-    first_artist,
-    force_titlecase,
-    normalize,
-    remove_feat,
-    remove_quoted_text,
-)
+from .normalize import (first_artist, force_titlecase, normalize, remove_feat,
+                        remove_quoted_text)
 from .recording import MBRecording, RecordingInfo
 from .track_cache import MBTrackCache
 
@@ -19,6 +13,9 @@ class LibraryTrackFinder:
         self.library = library
         self.library_only = library_only
         self.cache = cache
+
+        # Initialize a single intstance of MBTrackFinder we can reuse for non-library lookups
+        self.mb_track_finder = MBTrackFinder(self.cache)
 
     def findByMBID(self, mbid) -> RecordingInfo | None:
         # Return the cached value if it exists
@@ -187,16 +184,15 @@ class LibraryTrackFinder:
             elif not self.library_only:
                 # Provide the album hint to the track finder so that we get better
                 # recording results
-                tf = MBTrackFinder(self.cache)
-                return tf.find(artist, title, correct_song.album)
+                return self.mb_track_finder.find(artist, title, correct_song.album)
             # We can't search MusicBrainz and the id isn't stored in the library
             else:
                 return None
         else:
             # This song is not present in the library, find all the info anyway
             if not self.library_only:
-                tf = MBTrackFinder(self.cache)
-                return tf.find(artist, title, album)
+
+                return self.mb_track_finder.find(artist, title, album)
             # If library only is set, then do not fetch anything
             else:
                 return None

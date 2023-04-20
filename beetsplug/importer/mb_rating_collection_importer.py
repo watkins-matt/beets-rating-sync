@@ -50,7 +50,9 @@ class MBRatingCollectionImporter(RatingStoreImporter):
                     rec_info, overwrite, MBRatingCollectionImporter.RATING_SET
                 )
             else:
-                # Todo: Make this a debug log
+                # Todo: Make this a debug log.
+                # Todo: Handle edge case where the MBID changed due to merge. We need to
+                # look up the MBID in Musicbrainz to get the new MBID
                 print(
                     f"import_recording_collection: Could not find recording {recording.title} -- [{recording.mbid}]"
                 )

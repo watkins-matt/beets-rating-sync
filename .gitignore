@@ -3,3 +3,4 @@
 __pycache__/
 .mbcache/
 .lastfm/
+debug_config.py

@@ -9,8 +9,8 @@ class RatingStore:
     interact with."""
 
     def __init__(self):
-        self.ratings = {}  # Key: mbid, Value: RecordingInfo
-        self.rating_sets = {}  # Key: rating_set:str, Value: set[str]
+        self.ratings: dict[str, RecordingInfo] = {}  # Key: mbid, Value: RecordingInfo
+        self.rating_sets: dict[str, set[str]] = {}  # Key: rating_set:str, Value: set[str]
         self.rating_set_all: set[str] = set()
 
     def add_rating(

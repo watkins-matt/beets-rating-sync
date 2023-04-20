@@ -1,5 +1,7 @@
 from logging import getLogger
 
+from beets import dbcore
+
 from ..matcher import RecordingMatcher
 from ..rating_store import RatingStore, RatingStoreExporter
 
@@ -12,10 +14,25 @@ class BeetRatingExporter(RatingStoreExporter):
         found_count = 0
         missing_count = 0
 
-        recordings = sorted(rating_store.ratings.values(), key=lambda k: k.rating, reverse=True)
         matcher = RecordingMatcher(self.library, getLogger("beets"))
 
-        for recording in recordings:
+        # Find all of the existing ratings in the library
+        beet_existing_ratings = self.library.items(dbcore.query.RegexpQuery("rating", r"\d"))
+
+        # Create a set of all of the existing ratings
+        existing_recording_set = {existing_rating["mb_trackid"] for existing_rating in
+                                  beet_existing_ratings if existing_rating["mb_trackid"]}
+        unrated_songs: set = existing_recording_set - rating_store.rating_set_all
+        print(f"Found {len(unrated_songs)} unrated songs..")
+
+        for unrated_song in unrated_songs:
+            recording = rating_store.ratings.get(unrated_song, None)
+
+            if not recording:
+                print(f"Missing recording: {unrated_song} from ratings library.")
+                continue
+
+            print(f"Attempting to add song rating: {recording}")
             song = matcher.match(recording)
 
             # We found a song and have a rating to update

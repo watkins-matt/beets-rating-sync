@@ -1,8 +1,8 @@
 from logging import getLogger
 
-from thefuzz import fuzz
-
+import beets.library
 from beets import dbcore
+from thefuzz import fuzz
 
 from .normalize import first_artist
 from .recording import RecordingInfo
@@ -13,7 +13,7 @@ class RecordingMatcher:
         self.lib = lib
         self.logger = logger if logger else getLogger("beets")
 
-    def match(self, recording: RecordingInfo):
+    def match(self, recording: RecordingInfo) -> beets.library.Item | None:
         """Finds a matching song in the library based on a recording object"""
         song = None
         songs = self.lib.items(dbcore.query.MatchQuery("mb_trackid", recording.mbid))

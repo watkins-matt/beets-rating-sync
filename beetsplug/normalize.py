@@ -1,5 +1,7 @@
 import re
 
+import unidecode
+
 # TODO: Normalize ’ characters to '
 # Normalize all " to '
 
@@ -43,6 +45,9 @@ def normalize_artists(artist_string):
     for delimiter in valid_delimters:
         artist_string = artist_string.replace(delimiter, "; ")
 
+    # Transliterate unicode characters to ASCII
+    artist_string = unidecode.unidecode(artist_string)
+
     return artist_string
 
 
@@ -79,6 +84,8 @@ def remove_quoted_text(title):
 
 
 def normalize(title):
+    # Transliterate unicode characters to ASCII
+    title = unidecode.unidecode(title)
     title = normalize_spotify_title(title)
     # title = remove_quoted_text(title)
     title = (

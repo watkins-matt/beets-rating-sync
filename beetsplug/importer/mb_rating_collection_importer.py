@@ -47,7 +47,7 @@ class MBRatingCollectionImporter(RatingStoreImporter):
             if rec_info:
                 rec_info.rating = rating
                 rating_store.add_rating(
-                    rec_info, overwrite, MBRatingCollectionImporter.RATING_SET
+                    rec_info, self.RATING_SET, overwrite,
                 )
             else:
                 # Todo: Make this a debug log.

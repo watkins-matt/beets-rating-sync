@@ -25,7 +25,6 @@ class BeetRatingExporter(RatingStoreExporter):
         existing_recording_set = {existing_rating["mb_trackid"] for existing_rating in
                                   beet_existing_ratings if existing_rating["mb_trackid"]}
 
-
         # All of the songs that are in the rating store, but not in the library
         # This will be all of the songs that are unrated and as well as songs that
         # are missing an MBID

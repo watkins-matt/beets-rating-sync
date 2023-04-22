@@ -3,7 +3,6 @@ import os
 from typing import Any
 
 import pylast
-
 from beets import plugins
 
 from ..rating_store import RatingStore, RatingStoreImporter
@@ -12,6 +11,8 @@ from ..track_finder import MBTrackFinder
 
 
 class LastFMLovedTrackImporter(RatingStoreImporter):
+    RATING_SET = "lastfm"
+
     def __init__(self, user_name, cache_dir: str, rating: int = 4, track_finder=None):
         # Last FM object
         self.last_fm = pylast.LastFMNetwork(api_key=plugins.LASTFM_KEY)
@@ -288,4 +289,4 @@ class LastFMLovedTrackImporter(RatingStoreImporter):
 
         for recording in recordings:
             recording.rating = self.default_rating
-            rating_store.add_rating(recording)
+            rating_store.add_rating(recording, self.RATING_SET)

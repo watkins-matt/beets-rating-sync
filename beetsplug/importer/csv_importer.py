@@ -5,6 +5,8 @@ from ..recording import RecordingInfo
 
 
 class CSVImporter(RatingStoreImporter):
+    RATING_SET = "csv"
+
     def __init__(self, file_name):
         self.file_name = file_name
 
@@ -30,5 +32,5 @@ class CSVImporter(RatingStoreImporter):
                     print(f"Error reading CSV file on line {line}. Skipping line.")
                     continue
 
-                rating_store.add_rating(recording)
+                rating_store.add_rating(recording, rating_set=self.RATING_SET)
                 line += 1

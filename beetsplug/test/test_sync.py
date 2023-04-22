@@ -4,7 +4,8 @@ import unittest
 
 from ..exporter.csv_exporter import CSVExporter
 from ..importer.csv_importer import CSVImporter
-from ..rating_store import RatingStore, RatingStoreExporter, RatingStoreImporter
+from ..rating_store import (RatingStore, RatingStoreExporter,
+                            RatingStoreImporter)
 from ..recording import RecordingInfo
 
 
@@ -28,8 +29,8 @@ class MockMBRatingCollectionImporter(RatingStoreImporter):
             4,
         )
 
-        rating_store.add_rating(one_last_time, False, "mb")
-        rating_store.add_rating(going_dumb, False, "mb")
+        rating_store.add_rating(one_last_time, "mb", False)
+        rating_store.add_rating(going_dumb, "mb", False)
 
 
 class MockLastFMImporter(RatingStoreImporter):
@@ -50,8 +51,8 @@ class MockLastFMImporter(RatingStoreImporter):
             "e7c51076-088c-4e67-9bf1-897987987",
             3,
         )
-        rating_store.add_rating(one_last_time, False, "lastfm")
-        rating_store.add_rating(test_song, False, "lastfm")
+        rating_store.add_rating(one_last_time, "lastfm", False)
+        rating_store.add_rating(test_song, "lastfm", False)
 
 
 class TestSync(unittest.TestCase):

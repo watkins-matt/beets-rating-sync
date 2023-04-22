@@ -102,6 +102,9 @@ class RatingSyncPlugin(BeetsPlugin):
         for exporter in exporters:
             exporter.export_songs(rating_store)
 
+        # Make sure to save the track cache
+        self.track_cache.save()
+
     def sync_collection(self, lib, collection: RecordingCollection, rating: int):
         """Syncs a specific collection with beets"""
 

@@ -1,7 +1,9 @@
 import musicbrainzngs
+import unidecode
 from beets import dbcore
 from thefuzz import fuzz
 
+from .mb_user import log_rate_limited_call
 from .normalize import (first_artist, force_titlecase, normalize, remove_feat,
                         remove_quoted_text)
 from .recording import MBRecording, RecordingInfo
@@ -107,7 +109,11 @@ class LibraryTrackFinder:
         # Return the cached value if it exists
         if self.cache:
             # Will return None if no match is found
-            return self.cache.get(artist, title, album)
+            result = self.cache.get(artist, title, album)
+
+            # Only return the result if we found one, otherwise proceed with the lookup
+            if result:
+                return result
 
         songs = []
 
@@ -209,6 +215,7 @@ class MBTrackFinder:
             if result:
                 return result
 
+        log_rate_limited_call("get_recording_by_id")
         recordings = musicbrainzngs.get_recording_by_id(
             mbid, includes=["artists", "releases"]
         )
@@ -240,14 +247,20 @@ class MBTrackFinder:
         # Return the cached value if it exists
         if self.cache:
             # Will return None if no match is found
-            return self.cache.get(artist, title, album)
+            result = self.cache.get(artist, title, album)
+
+            if result:
+                return result
 
         # If album is None we just use the title
         album = title if not album else album
         track = None
         print("Searching for %s - %s " % (artist, title), end="")
 
+        # Normalize the strings
         title = normalize(title)
+        artist = unidecode.unidecode(artist)
+
         search_args = {
             "artist": artist.lower().strip(),
             "release": album.lower().strip(),
@@ -283,6 +296,7 @@ class MBTrackFinder:
         if "release" in search_args:
             del search_args["release"]
 
+        log_rate_limited_call("search_recordings")
         results = musicbrainzngs.search_recordings(
             query=normalized_title, limit=10, strict=use_strict, **search_args
         )
@@ -346,9 +360,10 @@ class MBTrackFinder:
                 # We have to find a specific release by this artist
                 # This may not work for compilaton albums
                 release = find_artist_release(recording["release-list"])
+
+                # We didn't find a valid release, keep searching
                 if not release:
-                    # Just use the first release
-                    release = recording["release-list"][0]
+                    continue
 
                 # Load the length information if available
                 if "length" in recording:
@@ -380,7 +395,13 @@ class MBTrackFinder:
         artists = artist.split("; ")
         title = title.lower().strip()
 
+        # Make sure that release is present
+        if "release" not in search_args:
+            search_args["release"] = title.lower().strip()
+
         search_args["release"] = remove_feat(search_args["release"])
+
+        log_rate_limited_call("search_release_groups")
         results = musicbrainzngs.search_release_groups(
             limit=10, **search_args, strict=use_strict
         )
@@ -401,6 +422,8 @@ class MBTrackFinder:
 
             for release_result in release_results:
                 release_id = release_result["id"]
+
+                log_rate_limited_call("get_release_by_id")
                 release = musicbrainzngs.get_release_by_id(
                     release_id, includes=["recordings", "artists"]
                 )

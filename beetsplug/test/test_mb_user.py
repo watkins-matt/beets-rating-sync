@@ -2,8 +2,8 @@ import os
 import time
 import unittest
 
-from ..credentials import load_musicbrainz_credentials
-from ..mb_user import MBCache, MBRecordingCollection, MBUser
+from beetsplug.credentials import load_musicbrainz_credentials
+from beetsplug.mb_user import MBCache, MBRecordingCollection, MBUser
 
 
 class TestMBUser(unittest.TestCase):

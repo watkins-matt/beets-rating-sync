@@ -5,12 +5,13 @@ from pathlib import Path
 
 from beets import library
 
-from ..credentials import load_musicbrainz_credentials
-from ..importer.mb_rating_collection_importer import MBRatingCollectionImporter
-from ..mb_user import RATE_LIMIT_CALLS, MBCache
-from ..rating_store import RatingStore
-from ..track_cache import MBTrackCache
-from ..track_finder import LibraryTrackFinder
+from beetsplug.credentials import load_musicbrainz_credentials
+from beetsplug.importer.mb_rating_collection_importer import \
+    MBRatingCollectionImporter
+from beetsplug.mb_user import RATE_LIMIT_CALLS, MBCache
+from beetsplug.rating_store import RatingStore
+from beetsplug.track_cache import MBTrackCache
+from beetsplug.track_finder import LibraryTrackFinder
 
 
 class TestMBCollectionImporter(unittest.TestCase):

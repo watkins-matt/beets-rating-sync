@@ -4,8 +4,8 @@ from pathlib import Path
 
 from beets import library
 
-from ..credentials import init_musicbrainzngs
-from ..track_finder import LibraryTrackFinder
+from beetsplug.credentials import init_musicbrainzngs
+from beetsplug.track_finder import LibraryTrackFinder
 
 
 class TestLBTrackFinder(unittest.TestCase):

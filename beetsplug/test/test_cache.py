@@ -1,10 +1,10 @@
 import unittest
 
-from ..recording import RecordingInfo
-from ..track_cache import MBTrackCache
+from beetsplug.recording import RecordingInfo
+from beetsplug.track_cache import MBTrackCache
 
 
-class TestCache(unittest.TestCase):
+class TestMBCache(unittest.TestCase):
     def test_cache(self):
         cache = MBTrackCache()
         cache.add(

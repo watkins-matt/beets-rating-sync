@@ -1,11 +1,7 @@
 import unittest
 
-from ..normalize import (
-    normalize,
-    normalize_spotify_title,
-    remove_feat,
-    remove_quoted_text,
-)
+from beetsplug.normalize import (normalize, normalize_spotify_title,
+                                 remove_feat, remove_quoted_text)
 
 
 class TestNormalize(unittest.TestCase):

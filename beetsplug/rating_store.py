@@ -3,6 +3,12 @@ from abc import ABC, abstractmethod
 from .recording import RecordingInfo
 
 
+class Conflict:
+    def __init__(self, mbid: str):
+        self.mbid = mbid
+        self.recordings: dict[str, RecordingInfo] = {}  # Key: rating_set:str, Value: RecordingInfo
+
+
 class RatingStore:
     """Acts as an in-memory representation of all of the song ratings.
     Considered the single source of truth that importers and exporters
@@ -12,10 +18,22 @@ class RatingStore:
         self.ratings: dict[str, RecordingInfo] = {}  # Key: mbid, Value: RecordingInfo
         self.rating_sets: dict[str, set[str]] = {}  # Key: rating_set:str, Value: set[str]
         self.rating_set_all: set[str] = set()
+        self.conflicts: dict[str, Conflict] = {}  # Key: mbid, Value: Conflict
 
     def add_rating(
-        self, recording: RecordingInfo, overwrite=False, rating_set: str | None = None
+        self, recording: RecordingInfo, rating_set: str, overwrite=False
     ):
+        # Check to see if this rating is conflicted
+        if recording.mbid in self.ratings and self.ratings[recording.mbid].rating != recording.rating:
+            # This is the first conflict for this recording, create it
+            if recording.mbid not in self.conflicts:
+                self.conflicts[recording.mbid] = Conflict(recording.mbid)
+
+            # Add the conflicting recording to the conflict
+            self.conflicts[recording.mbid].recordings[rating_set] = recording
+            # Add the existing recording to the conflict
+            self.conflicts[recording.mbid].recordings["existing"] = self.ratings[recording.mbid]
+
         # If the recording is already present, reuse the existing rating unless
         # we specified that we should overwrite other ratings
         if recording.mbid in self.ratings and not overwrite:

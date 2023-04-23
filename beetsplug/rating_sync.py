@@ -27,6 +27,7 @@ class RatingSyncPlugin(BeetsPlugin):
         self.track_cache = MBTrackCache()
         self.item_types = {"rating": types.INTEGER}
 
+        # Check for MusicBrainz credentials
         try:
             self.mb_user = self.config["mb_user"].get(str)
             self.mb_pass = self.config["mb_pass"].get(str)
@@ -39,12 +40,14 @@ class RatingSyncPlugin(BeetsPlugin):
             # TODO: Handle no MusicBrainz credentials
             sys.exit(1)
 
+        # Authenticate with MusicBrainz
         musicbrainzngs.auth(self.mb_user, self.mb_pass)
         musicbrainzngs.set_useragent(
             "Beets-Rating-Sync", "0.1b", "https://github.com/watkins-matt/beets-rating-sync"
         )
         musicbrainzngs.set_rate_limit(limit_or_interval=1.0, new_requests=1)
 
+        # Check for LastFM credentials
         try:
             self.lastfm_user = self.config["lastfm_user"].get(str)
             self._log.debug("Found LastFM credentials.")

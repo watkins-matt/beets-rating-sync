@@ -2,11 +2,11 @@ import os
 import pathlib
 import unittest
 
-from ..exporter.csv_exporter import CSVExporter
-from ..importer.csv_importer import CSVImporter
-from ..rating_store import (RatingStore, RatingStoreExporter,
-                            RatingStoreImporter)
-from ..recording import RecordingInfo
+from beetsplug.exporter.csv_exporter import CSVExporter
+from beetsplug.importer.csv_importer import CSVImporter
+from beetsplug.rating_store import (RatingStore, RatingStoreExporter,
+                                    RatingStoreImporter)
+from beetsplug.recording import RecordingInfo
 
 
 class MockMBRatingCollectionImporter(RatingStoreImporter):

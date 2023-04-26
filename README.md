@@ -7,15 +7,9 @@ After using this plugin, looking up all of your 5 star rated songs is as simple 
 
 ## Installation
 
-This plugin requires the following packages:
-- musicbrainzngs
-- thefuzz
-
-
-Install them with pip first:
+Install the dependencies with pip:
 ```
-$ pip install musicbrainzngs
-$ pip install thefuzz
+$ pip3 install -r requirements.txt
 ```
 
 Now download beets-rating-sync to a folder and add the path to your config.yaml

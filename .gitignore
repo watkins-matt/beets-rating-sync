@@ -1,6 +1,7 @@
-*.py[cod]
-.vscode/
 __pycache__/
-.mbcache/
 .lastfm/
+.mbcache/
+.venv
+.vscode/
+*.py[cod]
 debug_config.py

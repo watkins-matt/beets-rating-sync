@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any
 
 
 class MBRecording:
@@ -27,7 +27,8 @@ class RecordingInfo:
         self.length = int(length)
         self.mbid = mbid
         self.rating = rating
-        self.extra: Dict[str, Any] = {}
+        self.extra: dict[str, Any] = {}
+        self.sources: dict[str, int] = {}  # Key: source, Value: rating
 
     def valid(self) -> bool:
         return (

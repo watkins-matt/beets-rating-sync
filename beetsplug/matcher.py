@@ -48,7 +48,7 @@ class RecordingMatcher:
                 [
                     dbcore.query.SubstringQuery("title", recording.title),
                     dbcore.query.NumericQuery(
-                        "length", "{0}..{1}".format(length_lower, length_upper)
+                        "length", f"{length_lower}..{length_upper}"
                     ),
                 ]
             )

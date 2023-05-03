@@ -4,8 +4,13 @@ from beets import dbcore
 from thefuzz import fuzz
 
 from .mb_user import log_rate_limited_call
-from .normalize import (first_artist, force_titlecase, normalize, remove_feat,
-                        remove_quoted_text)
+from .normalize import (
+    first_artist,
+    force_titlecase,
+    normalize,
+    remove_feat,
+    remove_quoted_text,
+)
 from .recording import MBRecording, RecordingInfo
 from .track_cache import MBTrackCache
 
@@ -19,7 +24,7 @@ class LibraryTrackFinder:
         # Initialize a single intstance of MBTrackFinder we can reuse for non-library lookups
         self.mb_track_finder = MBTrackFinder(self.cache)
 
-    def findByMBID(self, mbid) -> RecordingInfo | None:
+    def findByMBID(self, mbid: str) -> RecordingInfo | None:
         # Return the cached value if it exists
         if self.cache:
             result = self.cache.getByMBID(mbid)
@@ -73,9 +78,7 @@ class LibraryTrackFinder:
         andQuery = dbcore.AndQuery(
             [
                 dbcore.query.SubstringQuery("title", remove_quoted_text(title)),
-                dbcore.query.NumericQuery(
-                    "length", "{0}..{1}".format(length_lower, length_upper)
-                ),
+                dbcore.query.NumericQuery("length", f"{length_lower}..{length_upper}"),
             ]
         )
 
@@ -197,7 +200,6 @@ class LibraryTrackFinder:
         else:
             # This song is not present in the library, find all the info anyway
             if not self.library_only:
-
                 return self.mb_track_finder.find(artist, title, album)
             # If library only is set, then do not fetch anything
             else:
@@ -446,10 +448,11 @@ class MBTrackFinder:
 
                 # If artist is not on this release, skip it because it's wrong
                 # correct_artist = any(artist in artist_credit for artist in artists)
-                if not artists[0].lower().strip() in artist_credit:
+                if artists[0].lower().strip() not in artist_credit:
                     continue
 
-                # This release group is a remix release group but we aren't searching for a remix
+                # This release group is a remix release group but we
+                # aren't searching for a remix
                 if (
                     "remix" in release["release"]["title"].lower()
                     or "remixes" in release["release"]["title"].lower()

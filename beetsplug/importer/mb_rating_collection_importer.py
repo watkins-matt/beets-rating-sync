@@ -28,7 +28,7 @@ class MBRatingCollectionImporter(RatingStoreImporter):
                         collection.name, collection.mbid
                     )
                     self.import_recording_collection(
-                        rec_collection, numeric_rating, rating_store
+                        rec_collection, numeric_rating, rating_store, True
                     )
 
     def import_recording_collection(
@@ -47,14 +47,17 @@ class MBRatingCollectionImporter(RatingStoreImporter):
             if rec_info:
                 rec_info.rating = rating
                 rating_store.add_rating(
-                    rec_info, self.RATING_SET, overwrite,
+                    rec_info,
+                    self.RATING_SET,
+                    overwrite,
                 )
             else:
                 # Todo: Make this a debug log.
                 # Todo: Handle edge case where the MBID changed due to merge. We need to
                 # look up the MBID in Musicbrainz to get the new MBID
                 print(
-                    f"import_recording_collection: Could not find recording {recording.title} -- [{recording.mbid}]"
+                    f"import_recording_collection: Could not find recording "
+                    f"{recording.title} -- [{recording.mbid}]"
                 )
                 print(
                     "import_recording_collection: The track may not be in your library"

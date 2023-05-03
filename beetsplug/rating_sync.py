@@ -34,7 +34,8 @@ class RatingSyncPlugin(BeetsPlugin):
         except (ConfigValueError, NotFoundError):
             self._log.error("Musicbrainz credentials are invalid or missing.")
             self._log.error(
-                "Please ensure both mb_user and mb_pass are set in the config file under the rating_sync section."
+                "Please ensure both mb_user and mb_pass are set in the "
+                "config file under the rating_sync section."
             )
             # TODO: Handle no MusicBrainz credentials
             sys.exit(1)
@@ -92,7 +93,7 @@ class RatingSyncPlugin(BeetsPlugin):
         if self.mb_user:
             mb_user = mb_cache.get_user(self.mb_user, self.mb_pass)
             mb_import = MBRatingCollectionImporter(mb_user, mb_cache, track_finder)
-            mb_exporter = MBRatingCollectionExporter(mb_user)
+            # mb_exporter = MBRatingCollectionExporter(mb_user)
             beet_exporter = BeetRatingExporter(lib)
             importers.append(mb_import)
             # exporters.append(mb_exporter)

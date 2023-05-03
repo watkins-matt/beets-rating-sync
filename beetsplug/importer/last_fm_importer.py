@@ -42,8 +42,8 @@ class LastFMLovedTrackImporter(RatingStoreImporter):
         if os.path.exists(self.unmatched_path):
             self.load_unmatched(self.unmatched_path)
 
-        # Note that we always attempt to load from last_fm. We load recordings one by one
-        # until we reach the first cached recording or the end if nothing is cached.
+        # Note that we always attempt to load from last_fm. We load recordings one by
+        # one until we reach the first cached recording or the end if nothing is cached.
         # This will be fast if everything is cached already.
         self.load_from_lastfm()
 
@@ -87,9 +87,11 @@ class LastFMLovedTrackImporter(RatingStoreImporter):
                     )
 
         except IOError:
-            # If there were issues loading the cache, reload and recache from Musicbrainz.
+            # If there were issues loading the cache,
+            # reload and recache from Musicbrainz.
             print(
-                f"LastFMLovedTrackImporter.load_cache: Unable to load loved tracks from {cache_path}."
+                f"LastFMLovedTrackImporter.load_cache: "
+                f"Unable to load loved tracks from {cache_path}."
             )
             print("Recaching from LastFM.")
 
@@ -138,9 +140,11 @@ class LastFMLovedTrackImporter(RatingStoreImporter):
                     )
 
         except IOError:
-            # If there were issues loading the cache, reload and recache from Musicbrainz.
+            # If there were issues loading the cache,
+            # reload and recache from Musicbrainz.
             print(
-                f"LastFMLovedTrackImporter.load_cache: Unable to load unmatched tracks from {cache_path}."
+                f"LastFMLovedTrackImporter.load_cache: "
+                f"Unable to load unmatched tracks from {cache_path}."
             )
             print("Recaching from LastFM.")
 
@@ -149,25 +153,27 @@ class LastFMLovedTrackImporter(RatingStoreImporter):
         tf = self.track_finder if self.track_finder else MBTrackFinder()
 
         try:
-            for loved_track in self.user.get_loved_tracks(limit=None, cacheable=True, stream=True):  # type: ignore
+            for loved_track in self.user.get_loved_tracks(
+                limit=None, cacheable=True, stream=True  # type: ignore
+            ):
                 track = loved_track.track
                 timestamp = int(loved_track.timestamp)
                 artist = track.get_artist().name
                 title = track.get_name()
                 album = None
 
-                # If this timestamp is lower than the max, we have already loaded the rest before
-                # from the cache
+                # If this timestamp is lower than the max,
+                # we have already loaded the rest before from the cache
                 if self.max_cached_timestamp and timestamp <= self.max_cached_timestamp:
                     break
 
                 try:
                     album = track.get_album()
                     if album:
-                        # If the album title is the same as the title, ignore it; we will try to
-                        # search for the album title with the same name as a last resort.
-                        # This avoids bad data from Last.fm where we are missing the actual
-                        # album name and we need to search for it.
+                        # If the album title is the same as the title, ignore it; we
+                        # will try to search for the album title with the same name as a
+                        # last resort. This avoids bad data from Last.fm where we are
+                        # missing the actual album name and we need to search for it.
                         album = album.title if album.title != title else None
                 # Did not find an album or Last.fm returned an error.
                 # For some reason reading the album tends to fail quite often.
@@ -207,7 +213,6 @@ class LastFMLovedTrackImporter(RatingStoreImporter):
         self.save_unmatched()
 
     def save_cache(self):
-
         field_names = ["artist", "album", "title", "length", "mbid", "timestamp"]
 
         # Create the cache directory if necessary
@@ -215,8 +220,8 @@ class LastFMLovedTrackImporter(RatingStoreImporter):
         if not os.path.exists(directory):
             os.mkdir(directory)
 
-        # Need to make sure the tracks are sorted by timestamp. They may be out of order if we
-        # found tracks that were unmapped previously
+        # Need to make sure the tracks are sorted by timestamp. They may be out
+        # of order if we found tracks that were unmapped previously
         recordings = sorted(
             self.loved_tracks.values(),
             key=lambda x: x.extra["lastfm_timestamp"],
@@ -268,7 +273,6 @@ class LastFMLovedTrackImporter(RatingStoreImporter):
             writer.writeheader()
 
             for recording in recordings:
-
                 row: dict[str, Any] = {
                     "artist": recording.artist,
                     "title": recording.title,

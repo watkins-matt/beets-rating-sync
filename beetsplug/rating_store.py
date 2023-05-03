@@ -55,9 +55,12 @@ class RatingStore:
             if source != "lastfm"
         }
 
+        # Get all of the ratings from the non last-fm sources
+        all_ratings = non_lastfm_ratings.values()
+
         # Check to see if there is any difference in the non last-fm sources
         # This means that there is a conflict between the sources
-        if max(non_lastfm_ratings.values()) != min(non_lastfm_ratings.values()):
+        if len(all_ratings) > 1 and max(all_ratings) != min(all_ratings):
             # This is the first conflict for this recording, create it
             if recording.mbid not in self.conflicts:
                 self.conflicts[recording.mbid] = Conflict(recording.mbid)

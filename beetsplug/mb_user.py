@@ -283,4 +283,8 @@ class MBUser:
         return self.collection_index[name]
 
     def submit_ratings(self, ratings: dict[str, int]):
-        musicbrainzngs.submit_ratings(recording_ratings=ratings)
+        try:
+            musicbrainzngs.submit_ratings(recording_ratings=ratings)
+        except musicbrainzngs.AuthenticationError as e:
+            error_text = str(e)
+            print("Error while submitting ratings to Musicbrainz:", error_text)

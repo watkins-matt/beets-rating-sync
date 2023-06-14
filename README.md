@@ -50,13 +50,9 @@ These are the default names that must be used; these will be user configurable i
 ```
 $ beet ratingsync
 ```
-This is the default, legacy sync method. This will first import all of your liked songs from Last.fm, then upload them as 4-star rated songs to your collections (you can increase or decrease the rating later on the Musicbrainz website). Note that if you have a lot of songs, this sync method can be slow due to Musicbrainz API rate limits. Finally, it will copy all of the song ratings to Beets using flexible attributes.
+This method uses caching to make synchronizing quick, which can be slow in general due to Musicbrainz rate limiting. This will first import all of your liked songs from Last.fm, then upload them as 4-star rated songs to your collections (you can increase or decrease the rating later on the Musicbrainz website). Finally, it will copy all of the song ratings to Beets using flexible attributes.
 
-```
-$ beet newratingsync
-```
-This is the in-development sync method which will eventually replace the legacy sync method. This method uses caching to make synchronizing nearly instant. It will eventually allow the cache to be refreshed manually or after a certain period of time. This method will also export all of your song ratings to csv for
-easy backup and restore later.
+It will eventually allow the cache to be refreshed manually or after a certain period of time. This method will also export all of your song ratings to csv for easy backup and restore later.
 
 ## How To Change Ratings
 

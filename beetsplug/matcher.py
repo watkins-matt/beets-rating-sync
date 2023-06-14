@@ -59,9 +59,10 @@ class RecordingMatcher:
                 song = songs.get()
             else:
                 for each_song in songs:
-                    # We might get the a collision if the track title is in the track title
-                    # of another song and the song lengths are similar. Double check
-                    # that the artist is correct and that the title is reasonably close
+                    # We might get the a collision if the track title is in the track
+                    # title of another song and the song lengths are similar. Double
+                    # check that the artist is correct and that the title is
+                    # reasonably close
                     if (
                         recording.artist
                         and first_artist(recording.artist) not in each_song["artist"]
@@ -74,7 +75,8 @@ class RecordingMatcher:
                         song = each_song
 
                         self.logger.info(
-                            f"RecordingMatcher: Matched song -- {song['title']} to {recording.title}"
+                            "RecordingMatcher: Matched song --"
+                            f"{song['title']} to {recording.title}"
                         )
 
         if not song:

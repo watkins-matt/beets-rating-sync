@@ -6,19 +6,8 @@ from pathlib import Path
 import musicbrainzngs
 
 from .credentials import contact, user_agent, version
+from .rate_limit_log import log_rate_limited_call
 from .recording import MBRecording
-
-LOG_RATE_LIMIT_CALLS = True
-RATE_LIMIT_CALLS = 0
-
-
-def log_rate_limited_call(name):
-    global LOG_RATE_LIMIT_CALLS
-    global RATE_LIMIT_CALLS
-
-    if LOG_RATE_LIMIT_CALLS:
-        RATE_LIMIT_CALLS += 1
-        print(f"{RATE_LIMIT_CALLS}. Rate limited call: {name}")
 
 
 class MBCache:
@@ -98,7 +87,9 @@ class MBRecordingCollection(MBCollection):
 
             if current_time - cache_mod_time > (3 * 60 * 60):  # 3 hours in seconds
                 # Cache is older than 3 hours, so load from MusicBrainz and update the cache
-                print("Cache is older than 3 hours, reloading and recaching from Musicbrainz.")
+                print(
+                    "Cache is older than 3 hours, reloading and recaching from Musicbrainz."
+                )
                 self.load_from_musicbrainz()
             else:
                 # Cache is fresh, so load from the cache file
@@ -215,7 +206,7 @@ class MBUser:
             # log_rate_limited_call("auth")
             musicbrainzngs.auth(user, password)
             MBUser.authenticated = True
-        except (musicbrainzngs.AuthenticationError):
+        except musicbrainzngs.AuthenticationError:
             print("Error: Unable to authenticate with MusicBrainz.")
             MBUser.authenticated = False
 

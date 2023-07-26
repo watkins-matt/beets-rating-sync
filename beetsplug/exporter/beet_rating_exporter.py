@@ -17,13 +17,18 @@ class BeetRatingExporter(RatingStoreExporter):
         matcher = RecordingMatcher(self.library, getLogger("beets"))
 
         # Find all of the existing ratings in the library
-        beet_existing_ratings = self.library.items(dbcore.query.RegexpQuery("rating", r"\d"))
+        beet_existing_ratings = self.library.items(
+            dbcore.query.RegexpQuery("rating", r"\d", False)
+        )
 
         # Create a recording set for all existing rated songs in the library
         # Note that this only includes songs that have an MBID, so songs without an
         # MBID will show up in our unrated_songs set below until we add one
-        existing_recording_set = {existing_rating["mb_trackid"] for existing_rating in
-                                  beet_existing_ratings if existing_rating["mb_trackid"]}
+        existing_recording_set = {
+            existing_rating["mb_trackid"]
+            for existing_rating in beet_existing_ratings
+            if existing_rating["mb_trackid"]
+        }
 
         # All of the songs that are in the rating store, but not in the library
         # This will be all of the songs that are unrated and as well as songs that
@@ -61,9 +66,7 @@ class BeetRatingExporter(RatingStoreExporter):
                 print(f"Added rating: {recording.title} --- {recording.rating}")
 
             else:
-                print(
-                    f"Missing Song: {0} --- {1}", recording.artist, recording.title
-                )
+                print(f"Missing Song: {0} --- {1}", recording.artist, recording.title)
                 missing_count += 1
 
         return (found_count, missing_count)

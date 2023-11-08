@@ -206,8 +206,12 @@ class LastFMLovedTrackImporter(RatingStoreImporter):
                     self.unmatched_tracks[timestamp] = recording
                     print(f'No match found for {artist} -- "{title}"')
 
-        except pylast.WSError as exception:
-            print("Error: %s" % exception)
+        except pylast.NetworkError as network_exception:
+            print(f"Network error: {network_exception}")
+        except pylast.WSError as ws_exception:
+            print(f"Web service error: {ws_exception}")
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
 
         self.save_cache()
         self.save_unmatched()
